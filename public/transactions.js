@@ -13,7 +13,7 @@ let availableTags = new Set();
 async function fetchTransactions() {
   try {
     const response = await fetch(
-      `http://localhost/home/transactions/${encodeURIComponent(
+      `/home/transactions/${encodeURIComponent(
         memberName
       )}?groupName=${encodeURIComponent(groupName)}`
     );
