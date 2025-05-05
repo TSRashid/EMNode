@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transactions</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body class="transactions-page">
+    <div class="header">
+      <h1>Transactions</h1>
+      <a href="/" class="back-btn">Back</a>
+    </div>
+    <div class="container">
+      <div class="member-row">
+        <h2 id="member-name-heading"></h2>
+      </div>
+      <div class="filter-row">
+        <div class="filter-item">
+          <label>
+            <input type="checkbox" id="paid-by-me-filter" /> Paid by Me
+          </label>
+        </div>
+        <div class="filter-item">
+          <span>Filter by Tag:</span>
+          <div id="tag-filters" class="tag-filter-options"></div>
+          <button id="apply-tag-filter" class="btn">Apply</button>
+        </div>
+      </div>
+      <div id="transaction-tables" class="table-row"></div>
+    </div>
+    <script src="transactions.js"></script>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Manager</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="header">
+      <h1>Expense Manager</h1>
+    </div>
+    <div class="container">
+      <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="/home/reset">Reset Data</a></li>
+          <li><a href="#">Settings</a></li>
+        </ul>
+      </div>
+      <div class="main-content">
+        <div class="group-header">
+          <h2>Groups</h2>
+          <button id="add-group-btn" class="btn btn-add-group">
+            Add Group
+          </button>
+        </div>
+        <div id="group-cards" class="group-cards"></div>
+      </div>
+    </div>
+
+    <dialog id="add-expense-dialog">
+      <h3 id="expense-dialog-title">Add Expense</h3>
+      <form id="expense-form">
+        <label
+          >Amount:
+          <input type="number" id="expense-amount" step="1" min="0" required
+        /></label>
+        <div id="paid-by-label">
+          <label
+            >Paid By:
+            <select id="paid-by"></select>
+          </label>
+        </div>
+        <label
+          >Tag:
+          <select id="expense-tag">
+            <option value="">Select Tag</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Breaktime">Breaktime</option>
+            <option value="Grocery">Grocery</option>
+            <option value="Elect Bill">Electricity Bill</option>
+            <option value="Internet Bill">Internet Bill</option>
+            <option value="misc">Miscellaneous</option>
+          </select>
+        </label>
+        <label
+          >Description: <textarea id="expense-description"></textarea>
+        </label>
+        <div class="divide-options">
+          <button type="button" id="divide-equally">Divide Equally</button>
+          <button type="button" id="divide-unequally">Divide Unequally</button>
+        </div>
+        <div id="unequal-members" class="checkbox-group"></div>
+        <input type="hidden" id="expense-mode" value="add" />
+        <input type="hidden" id="expense-member-name" />
+        <div class="dialog-buttons">
+          <button type="button" id="cancel-dialog">Cancel</button>
+          <button type="submit">Add Expense</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="add-group-dialog">
+      <h3>Add New Group</h3>
+      <form id="group-form">
+        <label
+          >Group Name: <input type="text" id="group-name" required
+        /></label>
+        <label
+          >Members (comma-separated):
+          <input type="text" id="group-members" required
+        /></label>
+        <div class="dialog-buttons">
+          <button type="button" id="cancel-group-dialog">Cancel</button>
+          <button type="submit">Create Group</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="add-member-dialog">
+      <h3>Add Member</h3>
+      <form id="member-form">
+        <label
+          >Member Name: <input type="text" id="member-name" required
+        /></label>
+        <input type="hidden" id="member-group-name" />
+        <div class="dialog-buttons">
+          <button type="button" id="cancel-member-dialog">Cancel</button>
+          <button type="submit">Add Member</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="cash-dialog">
+      <h3 id="cash-dialog-title">Cash Transaction</h3>
+      <form id="cash-form">
+        <label
+          >Amount:
+          <input type="number" id="cash-amount" step="1" min="0" required
+        /></label>
+        <div style="display: none">
+          <label
+            >Paid By:
+            <select id="cash-paid-by" required></select>
+          </label>
+        </div>
+        <label>Description: <textarea id="cash-description"></textarea></label>
+        <input type="hidden" id="cash-group-name" />
+        <input type="hidden" id="cash-member-name" />
+        <input type="hidden" id="cash-type" />
+        <div class="dialog-buttons">
+          <button type="button" id="cancel-cash-dialog">Cancel</button>
+          <button type="submit">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Add Delete Group Dialog -->
+    <dialog id="delete-group-dialog">
+      <h3>Delete Group</h3>
+      <p>
+        Are you sure you want to delete the group "<span
+          id="delete-group-name"
+        ></span
+        >"? This action cannot be undone.
+      </p>
+      <div class="dialog-buttons">
+        <button type="button" id="cancel-delete-group">Cancel</button>
+        <button type="button" id="confirm-delete-group" class="btn-danger">
+          Delete
+        </button>
+      </div>
+    </dialog>
+
+    <!-- Add Reset Group Dialog -->
+    <dialog id="reset-group-dialog">
+      <h3>Reset Group</h3>
+      <p>
+        Are you sure you want to reset the balances for the group "<span
+          id="reset-group-name"
+        ></span
+        >"? This will set all member balances to 0.
+      </p>
+      <div class="dialog-buttons">
+        <button type="button" id="cancel-reset-group">Cancel</button>
+        <button type="button" id="confirm-reset-group" class="btn-warning">
+          Reset
+        </button>
+      </div>
+    </dialog>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
