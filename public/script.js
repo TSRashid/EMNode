@@ -37,7 +37,7 @@ document.querySelector(".header").addEventListener("click", toggleSidebar);
 
 async function fetchGroups() {
   try {
-    const response = await fetch("http://localhost/home");
+    const response = await fetch("/home");
     if (!response.ok) throw new Error("Failed to fetch groups");
     const groups = await response.json();
     renderGroups(groups);
@@ -226,7 +226,7 @@ function renderGroups(groups) {
       const groupName = btn.dataset.group;
       try {
         // First fetch the group data to get current member balances
-        const response = await fetch("http://localhost/home");
+        const response = await fetch("/home");
         if (!response.ok) {
           throw new Error("Failed to fetch groups");
         }
@@ -240,7 +240,7 @@ function renderGroups(groups) {
         for (const member of group.members) {
           // Fetch transactions for this member
           const response = await fetch(
-            `http://localhost/home/transactions/${encodeURIComponent(
+            `/home/transactions/${encodeURIComponent(
               member.name
             )}?groupName=${encodeURIComponent(groupName)}`
           );
@@ -641,7 +641,7 @@ expenseForm.addEventListener("submit", async (e) => {
   try {
     const endpoint =
       mode === "add" ? "/home/add-expense" : "/home/subtract-expense";
-    const response = await fetch(`http://localhost${endpoint}`, {
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(expenseData),
@@ -672,7 +672,7 @@ groupForm.addEventListener("submit", async (e) => {
   console.log("Sending group data:", groupData);
 
   try {
-    const response = await fetch("http://localhost/home/create-group", {
+    const response = await fetch("/home/create-group", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(groupData),
@@ -699,7 +699,7 @@ memberForm.addEventListener("submit", async (e) => {
   console.log("Sending member data:", memberData);
 
   try {
-    const response = await fetch("http://localhost/home/add-member", {
+    const response = await fetch("/home/add-member", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(memberData),
@@ -749,7 +749,7 @@ cashForm.addEventListener("submit", async (e) => {
   console.log("Sending cash data:", cashData);
 
   try {
-    const response = await fetch("http://localhost/home/cash-transaction", {
+    const response = await fetch("/home/cash-transaction", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cashData),
@@ -774,7 +774,7 @@ cancelDeleteGroupBtn.addEventListener("click", () => {
 confirmDeleteGroupBtn.addEventListener("click", async () => {
   const groupName = deleteGroupName.textContent;
   try {
-    const response = await fetch("http://localhost/home/delete-group", {
+    const response = await fetch("/home/delete-group", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ groupName }),
@@ -798,7 +798,7 @@ cancelResetGroupBtn.addEventListener("click", () => {
 confirmResetGroupBtn.addEventListener("click", async () => {
   const groupName = resetGroupName.textContent;
   try {
-    const response = await fetch("http://localhost/home/reset-group", {
+    const response = await fetch("/home/reset-group", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ groupName }),
