@@ -225,7 +225,6 @@ function renderGroups(groups) {
     btn.addEventListener("click", async () => {
       const groupName = btn.dataset.group;
       try {
-        // First fetch the group data to get current member balances
         const response = await fetch("/home");
         if (!response.ok) {
           throw new Error("Failed to fetch groups");
@@ -236,9 +235,7 @@ function renderGroups(groups) {
           throw new Error("Group not found");
         }
 
-        // Get transactions for each member
         for (const member of group.members) {
-          // Fetch transactions for this member
           const response = await fetch(
             `/home/transactions/${encodeURIComponent(
               member.name
@@ -249,7 +246,6 @@ function renderGroups(groups) {
           }
           const transactions = await response.json();
 
-          // Create table HTML
           let tableHTML = `
             <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10px;">
               <thead>
@@ -304,7 +300,6 @@ function renderGroups(groups) {
             </table>
           `;
 
-          // Create the full HTML document
           const htmlContent = `
             <html>
               <head>
@@ -356,7 +351,6 @@ function renderGroups(groups) {
             </html>
           `;
 
-          // Convert HTML to PDF using html2pdf.js
           const element = document.createElement("div");
           element.innerHTML = htmlContent;
           document.body.appendChild(element);
@@ -577,18 +571,16 @@ expenseForm.addEventListener("submit", async (e) => {
 
   if (divideMode === "equally") {
     splitMembers = currentGroup.members;
-    // Calculate equal split amount and ensure integers
     const memberCount = splitMembers.length;
-    const baseAmount = Math.floor(amount / memberCount); // Base integer amount per member
-    let totalAssigned = baseAmount * memberCount; // Total amount assigned so far
-    let remaining = amount - totalAssigned; // Remaining amount to distribute
+    const baseAmount = Math.floor(amount / memberCount);
+    let totalAssigned = baseAmount * memberCount;
+    let remaining = amount - totalAssigned;
 
     customAmounts = {};
     splitMembers.forEach((member, index) => {
       let memberAmount = baseAmount;
-      // Distribute the remaining amount one unit at a time to members until exhausted
       if (remaining > 0 && index < remaining) {
-        memberAmount += 1; // Add 1 to this member's share
+        memberAmount += 1;
       }
       customAmounts[member.name] = memberAmount;
     });
@@ -600,26 +592,53 @@ expenseForm.addEventListener("submit", async (e) => {
       alert("Please select at least one member to split the expense");
       return;
     }
+
     splitMembers = Array.from(checkboxes).map((cb) => {
+      const index = parseInt(cb.value);
+      return currentGroup.members[index];
+    });
+
+    // Try to use custom amounts
+    let totalCustomAmount = 0;
+    customAmounts = {};
+    checkboxes.forEach((cb) => {
       const index = parseInt(cb.value);
       const customAmount =
         Math.round(
           parseFloat(
             document.querySelector(`input[name="amount-${index}"]`).value
           )
-        ) || 0; // Round to integer, default to 0 if NaN
+        ) || 0;
       customAmounts[currentGroup.members[index].name] = customAmount;
-      return currentGroup.members[index];
+      totalCustomAmount += customAmount;
     });
 
-    // Verify that the sum of custom amounts equals the total amount
-    const totalCustomAmount = Object.values(customAmounts).reduce(
-      (sum, val) => sum + val,
-      0
-    );
+    // If no valid custom amounts provided, split equally among selected members
+    if (totalCustomAmount === 0) {
+      const memberCount = splitMembers.length;
+      const baseAmount = Math.floor(amount / memberCount);
+      let totalAssigned = baseAmount * memberCount;
+      let remaining = amount - totalAssigned;
+
+      customAmounts = {};
+      splitMembers.forEach((member, index) => {
+        let memberAmount = baseAmount;
+        if (remaining > 0 && index < remaining) {
+          memberAmount += 1;
+        }
+        customAmounts[member.name] = memberAmount;
+      });
+
+      totalCustomAmount = Object.values(customAmounts).reduce(
+        (sum, val) => sum + val,
+        0
+      );
+    }
+
+    // Verify that the sum of amounts equals the total amount
     if (totalCustomAmount !== amount) {
       alert(
-        `The sum of custom amounts (${totalCustomAmount}) does not match the total amount (${amount}). Please adjust the amounts.`
+        `The sum of amounts (${totalCustomAmount}) does not match the total amount (${amount}). Please adjust the amounts.`
       );
       return;
     }
